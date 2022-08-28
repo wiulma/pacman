@@ -1,0 +1,74 @@
+:root {
+    --cell-color: #fff;
+}
+
+.grid-container {
+    background-color: green;
+    display: flex;
+    align-self: stretch;
+    align-content: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.grid {
+    width: 560px;
+    height: 560px;
+    border: 1px solid black;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    background-color: var(--cell-color);
+}
+
+.pac-dot {
+    background-color: green;
+    border: 5px solid var(--cell-color);
+    box-sizing: border-box;
+}
+
+.wall {
+    background-color: blue;
+}
+
+.power-pellet {
+    background-color: green;
+    border-radius: 10px;
+}
+
+.ghost-lair {
+    background-color: var(--cell-color);
+}
+
+.pacman {
+    background-color: red;
+    border-radius: 50%;
+}
+
+/* ghosts */
+
+.blinky {
+    background-color: aqua;
+    border: 0;
+}
+.pinky { 
+    background-color: darksalmon;
+    border: 0;
+}
+.inky {
+    background-color: blueviolet;
+    border: 0;
+}
+.clyde {
+    background-color: burlywood;
+    border: 0;
+}
+
+.scared-ghost {
+    background-color: chocolate;
+    border: 0;
+}
