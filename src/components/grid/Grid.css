@@ -1,5 +1,6 @@
 :root {
     --cell-color: #fff;
+    --cell-size: 22px;
 }
 
 .grid-container {
@@ -12,16 +13,16 @@
 }
 
 .grid {
-    width: 560px;
-    height: 560px;
+    width: calc(var(--cell-size) * 28);
+    height: calc(var(--cell-size) * 28);
     border: 1px solid black;
     display: flex;
     flex-wrap: wrap;
 }
 
 .cell {
-    width: 20px;
-    height: 20px;
+    width: var(--cell-size);
+    height: var(--cell-size);
     background-color: var(--cell-color);
 }
 
