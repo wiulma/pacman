@@ -1,21 +1,32 @@
 :root {
-    --cell-color: #fff;
-    --cell-size: 22px;
+    --cell-color: #291903;
+    --cell-size: 21px;
+    --characters-size: 70%;
+    --grid-width: 28;
+    --grid-height: 28;
+}
+
+@media (hover: none) and (pointer: coarse) and (max-width: 600px) {
+    :root {
+        --grid-width: 22;
+        --grid-height: 28;
+        --cell-size: 16px;
+    }
 }
 
 .grid-container {
-    background-color: green;
+    background-color: var(--bg-color);
     display: flex;
     align-self: stretch;
     align-content: center;
     justify-content: center;
-    padding: 2rem 0;
+    padding: 1rem 0;
 }
 
 .grid {
-    width: calc(var(--cell-size) * 28);
-    height: calc(var(--cell-size) * 28);
-    border: 1px solid black;
+    width: calc(var(--cell-size) * var(--grid-width));
+    height: calc(var(--cell-size) * var(--grid-height));
+    border: 0;
     display: flex;
     flex-wrap: wrap;
 }
@@ -27,7 +38,7 @@
 }
 
 .pac-dot {
-    background-color: green;
+    background-color: rgb(197, 197, 108);
     border: 5px solid var(--cell-color);
     box-sizing: border-box;
 }
@@ -37,39 +48,54 @@
 }
 
 .power-pellet {
-    background-color: green;
-    border-radius: 10px;
+    background-image: url('../../assets/pizza.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 90%;
 }
 
 .ghost-lair {
     background-color: var(--cell-color);
 }
 
-.pacman {
-    background-color: red;
-    border-radius: 50%;
+.characters {
+    background-color: var(--cell-color);
+    background-repeat: no-repeat;
+    background-size: 70%;
+    background-position: center;
+    border: 0;
 }
 
+.pacman.left {
+    background-image: url('../../assets/characters/pacman/pacman_left.png');
+}
+
+.pacman.right {
+    background-image: url('../../assets/characters/pacman/pacman_right.png');
+}
+
+.pacman.up {
+    background-image: url('../../assets/characters/pacman/pacman_up.png');
+}
+
+.pacman.down {
+    background-image: url('../.../../assets/characters/pacman/pacman_down.png');
+}
 /* ghosts */
 
 .blinky {
-    background-color: aqua;
-    border: 0;
+    background-image: url('../../assets/characters/ghosts/ghost_blinky.png');
 }
 .pinky { 
-    background-color: darksalmon;
-    border: 0;
+    background-image: url('../../assets/characters/ghosts/ghost_red.png');
 }
 .inky {
-    background-color: blueviolet;
-    border: 0;
+    background-image: url('../../assets/characters/ghosts/ghost_pink.png');
 }
 .clyde {
-    background-color: burlywood;
-    border: 0;
+    background-image: url('../../assets/characters/ghosts/ghost_orange.png');
 }
 
 .scared-ghost {
-    background-color: chocolate;
-    border: 0;
+    background-image: url('../../assets/characters/ghosts/ghost_scared.png');
 }

@@ -1,7 +1,11 @@
-.score-container {
-    background-color: red;
+.score-container span {
+    padding-right: .5rem;
+    font-size: 1.2rem;
+    color: var(--secondary-text-color)
 }
 
-.score-label {
-    padding-right: .5rem;
+@media (hover: none) and (pointer: coarse) {
+    .score-container span {
+        font-size: 1.5rem;
+    }
 }

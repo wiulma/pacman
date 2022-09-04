@@ -1,11 +1,15 @@
 import DomUitls from "../../utils/Dom"
 import template from "./Grid.html?raw"
-import { BOARD_SIZE, LAYOUT } from "./GridLayout"
+import { GRID_CONFIG } from "./GridLayout"
 import { Ghost } from "./Ghost"
 
 import "./Grid.css"
 import { EATEN_DOT, EATEN_GHOST, EATEN_PELLET } from "../score/ScorePoints"
 import { GHOST_SCARED_TIMEOUT } from "../game/GameSettings"
+
+const BOARD_CONFIG = DomUitls.needMobileLayout() ? GRID_CONFIG.MOBILE : GRID_CONFIG.DESKTOP
+
+const PACMAN_CLASSES = ["left", "right", "up", "down"]
 
 customElements.define(
   "app-grid",
@@ -13,7 +17,7 @@ customElements.define(
     squares = []
     pacmanPosition = -1
     score = 0
-    directions = [1, -1, BOARD_SIZE, -BOARD_SIZE]
+    directions = [1, -1, BOARD_CONFIG.BOARD_WIDTH, -BOARD_CONFIG.BOARD_WIDTH]
     powerPelletCells = []
 
     constructor() {
@@ -38,9 +42,9 @@ customElements.define(
       const container = this.querySelector(".grid")
       container.innerHTML = ""
       const frag = document.createDocumentFragment()
-      for (let i = 0, l = LAYOUT.length; i < l; i++) {
+      for (let i = 0, l = BOARD_CONFIG.LAYOUT.length; i < l; i++) {
         const elm = document.createElement("div")
-        const elmValue = LAYOUT[i]
+        const elmValue = BOARD_CONFIG.LAYOUT[i]
         elm.classList.add("cell")
         if (elmValue === 0) {
           elm.classList.add("pac-dot")
@@ -64,26 +68,31 @@ customElements.define(
     }
 
     onkeyUp(evt) {
-      if (this.pacmanPosition < 0 || ![38, 40, 37, 39].includes(evt.keyCode)) return false
-      this.squares[this.pacmanPosition].classList.remove("pacman")
-      switch (evt.keyCode) {
-        case 38: // arrow up
+      if (this.pacmanPosition < 0 || !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(evt.code))
+        return false
+      this.squares[this.pacmanPosition].classList.remove("characters", "pacman", [...PACMAN_CLASSES])
+      switch (evt.code) {
+        case "ArrowUp": // arrow up
           this.moveUp()
           break
 
-        case 40: // arrow down
+        case "ArrowDown": // arrow down
           this.moveDown()
           break
 
-        case 37: // arrow left
+        case "ArrowLeft": // arrow left
           this.moveLeft()
           break
 
-        case 39: // arrow right
+        case "ArrowRight": // arrow right
           this.moveRight()
           break
       }
-      this.squares[this.pacmanPosition].classList.add("pacman")
+      this.squares[this.pacmanPosition].classList.add(
+        "characters",
+        "pacman",
+        evt.code.replace("Arrow", "").toLowerCase()
+      )
       this.pacDotEaten()
       this.powerPelletEaten()
       this.pacGhostEaten()
@@ -93,34 +102,39 @@ customElements.define(
     startGame() {
       this.resetGame()
       this.createBoard()
-      this.squares[this.pacmanPosition].classList.add("pacman")
+      this.squares[this.pacmanPosition].classList.add("characters", "pacman", "left")
       this.setupGhosts()
     }
 
     moveLeft() {
-      if (this.pacmanPosition % BOARD_SIZE > 0 && this.canMove(this.pacmanPosition - 1)) {
+      if (this.pacmanPosition % BOARD_CONFIG.BOARD_WIDTH > 0 && this.canMove(this.pacmanPosition - 1)) {
         this.pacmanPosition -= 1
       }
     }
+
     moveRight() {
       if (
-        this.pacmanPosition % BOARD_SIZE !== BOARD_SIZE - 1 &&
+        this.pacmanPosition % BOARD_CONFIG.BOARD_WIDTH !== BOARD_CONFIG.BOARD_WIDTH - 1 &&
         this.canMove(this.pacmanPosition + 1)
       ) {
         this.pacmanPosition += 1
       }
     }
+
     moveUp() {
-      if (this.pacmanPosition - BOARD_SIZE >= 0 && this.canMove(this.pacmanPosition - BOARD_SIZE)) {
-        this.pacmanPosition -= BOARD_SIZE
+      if (
+        this.pacmanPosition - BOARD_CONFIG.BOARD_WIDTH >= 0 &&
+        this.canMove(this.pacmanPosition - BOARD_CONFIG.BOARD_WIDTH)
+      ) {
+        this.pacmanPosition -= BOARD_CONFIG.BOARD_WIDTH
       }
     }
     moveDown() {
       if (
-        this.pacmanPosition + BOARD_SIZE < LAYOUT.length &&
-        this.canMove(this.pacmanPosition + BOARD_SIZE)
+        this.pacmanPosition + BOARD_CONFIG.BOARD_WIDTH < BOARD_CONFIG.LAYOUT.length &&
+        this.canMove(this.pacmanPosition + BOARD_CONFIG.BOARD_WIDTH)
       ) {
-        this.pacmanPosition += BOARD_SIZE
+        this.pacmanPosition += BOARD_CONFIG.BOARD_WIDTH
       }
     }
 
@@ -142,9 +156,9 @@ customElements.define(
       this.ghosts.forEach((g) => {
         if (!!g.isScared) {
           if (this.squares[g.currentIndex].classList.contains("pacman")) {
-            this.squares[g.currentIndex].classList.remove("ghost", g.className, "scared-ghost")
+            this.squares[g.currentIndex].classList.remove("ghost", g.className, "characters", "scared-ghost")
             g.currentIndex = g.startIndex
-            this.squares[g.currentIndex].classList.add("ghost", g.className)
+            this.squares[g.currentIndex].classList.add("ghost", "characters", g.className)
             this.score += EATEN_GHOST
           }
         }
@@ -168,12 +182,12 @@ customElements.define(
 
     raiseGameOver() {
       this.stopEvents()
-      setTimeout(() => alert(`Game over!! Your score is ${this.score}`, 500))
+      document.dispatchEvent(new CustomEvent("gameover", { detail: this.score }))
     }
 
     raiseWin() {
       this.stopEvents()
-      setTimeout(() => alert(`YOU WIN!! Your score is ${this.score}`, 500))
+      document.dispatchEvent(new CustomEvent("gamewin", { detail: this.score }))
     }
 
     powerPelletEaten() {
@@ -193,6 +207,7 @@ customElements.define(
         this.checkForWin()
       }
     }
+
     checkForWin() {
       if (this.powerPelletCells.length === 0) {
         this.raiseWin()
@@ -213,12 +228,14 @@ customElements.define(
     }
 
     createGhosts() {
+      const startPosition = BOARD_CONFIG.GHOSTS_START
       this.ghosts = [
-        new Ghost("blinky", 348, 250),
-        new Ghost("pinky", 376, 400),
-        new Ghost("inky", 351, 300),
-        new Ghost("clyde", 379, 500),
+        new Ghost("blinky", startPosition[0], 250),
+        new Ghost("pinky", startPosition[1], 400),
+        new Ghost("inky", startPosition[2], 300),
+        new Ghost("clyde", startPosition[3], 500),
       ]
+      this.ghosts.forEach((g) => this.squares[g.currentIndex].classList.add("ghost", "characters", g.className))
     }
 
     startGhosts() {
@@ -229,11 +246,11 @@ customElements.define(
       let moveStep = this.directions[Math.floor(Math.random() * this.directions.length)]
       g.timerId = setInterval(() => {
         if (this.canGhostMove(g.currentIndex + moveStep)) {
-          this.squares[g.currentIndex].classList.remove("ghost", g.className, "scared-ghost")
+          this.squares[g.currentIndex].classList.remove("ghost", "characters", g.className, "scared-ghost")
           g.currentIndex = g.currentIndex + moveStep
-          this.squares[g.currentIndex].classList.add("ghost", g.className)
+          this.squares[g.currentIndex].classList.add("ghost", "characters", g.className)
           if (!!g.isScared) {
-            this.squares[g.currentIndex].classList.add("scared-ghost")
+            this.squares[g.currentIndex].classList.add("characters", "scared-ghost")
           }
         } else moveStep = this.directions[Math.floor(Math.random() * this.directions.length)]
 
