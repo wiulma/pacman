@@ -22,7 +22,7 @@
 
 body {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   display: flex;
@@ -126,6 +126,14 @@ h1 {
   font-family: 'Megrim';
   color: #000;
   text-align: center;
+}
+
+.dialog-content h1 {
+  margin: 1rem
+}
+
+.dialog-content p {
+  margin: 0.5rem;
 }
 
 .dialog-content p {

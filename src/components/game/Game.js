@@ -8,15 +8,20 @@ import "../score/Score"
 import "../virtualpad/VirtualPad"
 import "../gameover/GameOver"
 import "../gamewin/GameWin"
+import "../gamewinbirth/GameWinBirth"
 
 import { CUSTOM_CLAIM, DEFAULT_CLAIM } from "./Claim"
 
 const BIRTH = "20200909"
 
-function getClaimContent() {
+function isBirthday() {
   const today = new Date()
+  return today.getMonth() === parseInt(BIRTH.substring(4, 6)) - 1 && today.getDate() === parseInt(BIRTH.substring(6, 8))
+}
+
+function getClaimContent() {
   let claim = DEFAULT_CLAIM
-  if (today.getMonth() === parseInt(BIRTH.substring(4, 6)) - 1 && today.getDate() === parseInt(BIRTH.substring(6, 8))) {
+  if (isBirthday()) {
     claim = CUSTOM_CLAIM + DEFAULT_CLAIM.charAt(0).toLocaleLowerCase() + DEFAULT_CLAIM.substring(1)
   }
   return claim
@@ -48,10 +53,12 @@ customElements.define(
 
       document.addEventListener("gameover", (evt) => {
         this.querySelector("app-gameover").show(evt.detail)
+        document.getElementById("pacman_death").play()
       })
 
       document.addEventListener("gamewin", (evt) => {
-        this.querySelector("app-gamewin").show(evt.detail)
+        this.querySelector(isBirthday() ? "app-gamewinbirth" : "app-gamewin").show(evt.detail)
+        setTimeout(() => document.getElementById("pacman_win").play(), 200)
       })
     }
 

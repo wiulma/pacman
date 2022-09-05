@@ -1,11 +1,11 @@
 import DomUtils from "../../utils/Dom"
 
-import template from "./GameOver.html?raw"
+import template from "./GameWinBirth.html?raw"
 
-import "./GameOver.css"
+import "./GameWinBirth.css"
 
 customElements.define(
-  "app-gameover",
+  "app-gamewinbirth",
   class extends HTMLElement {
     constructor() {
       super()
@@ -16,14 +16,14 @@ customElements.define(
       this.appendChild(n)
       this.querySelector("#btnRestartGame").addEventListener("click", () => {
         document.querySelector("#game-container").classList.remove("hidden")
-        document.getElementById("gameOverDialog").close()
+        document.getElementById("gameWinBirthDialog").close()
         document.dispatchEvent(new CustomEvent("startgame"))
       })
     }
 
     show(data) {
       document.querySelector("#game-container").classList.add("hidden")
-      document.getElementById("gameOverDialog").showModal()
+      document.getElementById("gameWinBirthDialog").showModal()
     }
   }
 )

@@ -32,7 +32,6 @@ customElements.define(
 
     resetGame() {
       this.squares = []
-      this.pacmanPosition = -1
       this.score = 0
       this.powerPelletCells = []
       this.pacmanPosition = 490
@@ -47,7 +46,10 @@ customElements.define(
         const elmValue = BOARD_CONFIG.LAYOUT[i]
         elm.classList.add("cell")
         if (elmValue === 0) {
-          elm.classList.add("pac-dot")
+          elm.classList.add("dot")
+          const dot = document.createElement("div")
+          dot.classList.add("pac-dot")
+          elm.append(dot)
         } else if (elmValue === 1) {
           elm.classList.add("wall")
         } else if (elmValue === 2) {
@@ -55,6 +57,9 @@ customElements.define(
         } else if (elmValue === 3) {
           elm.classList.add("power-pellet")
           this.powerPelletCells.push(i)
+        }
+        if (elmValue === 0 || elmValue === 2 || elmValue === 3 || elmValue === 4) {
+          elm.classList.add("cell-border", ...this.getWallBorder(BOARD_CONFIG, i))
         }
         frag.appendChild(elm)
         this.squares.push(elm)
@@ -100,8 +105,10 @@ customElements.define(
     }
 
     startGame() {
+      document.getElementById("pacman_beginning").play()
       this.resetGame()
       this.createBoard()
+      this.squares[this.pacmanPosition].innerHTML = ""
       this.squares[this.pacmanPosition].classList.add("characters", "pacman", "left")
       this.setupGhosts()
     }
@@ -145,10 +152,12 @@ customElements.define(
 
     // pacman movement
     pacDotEaten() {
-      if (this.squares[this.pacmanPosition].classList.contains("pac-dot")) {
+      if (this.squares[this.pacmanPosition].classList.contains("dot")) {
+        this.squares[this.pacmanPosition].innerHTML = ""
         this.score += EATEN_DOT
         this.updateScore()
-        this.squares[this.pacmanPosition].classList.remove("pac-dot")
+        this.squares[this.pacmanPosition].classList.remove("dot")
+        document.getElementById("pacman_chomp").play()
       }
     }
 
@@ -156,10 +165,12 @@ customElements.define(
       this.ghosts.forEach((g) => {
         if (!!g.isScared) {
           if (this.squares[g.currentIndex].classList.contains("pacman")) {
-            this.squares[g.currentIndex].classList.remove("ghost", g.className, "characters", "scared-ghost")
+            debugger
+            this.squares[g.currentIndex].classList.remove("ghost", g.className, "scared-ghost")
             g.currentIndex = g.startIndex
             this.squares[g.currentIndex].classList.add("ghost", "characters", g.className)
             this.score += EATEN_GHOST
+            document.getElementById("pacman_eatghost").play()
           }
         }
       })
@@ -204,6 +215,7 @@ customElements.define(
         })
         this.squares[this.pacmanPosition].classList.remove("power-pellet")
         this.powerPelletCells = this.powerPelletCells.filter((v) => v !== this.pacmanPosition)
+        document.getElementById("pacman_eatfruit").play()
         this.checkForWin()
       }
     }
@@ -212,6 +224,30 @@ customElements.define(
       if (this.powerPelletCells.length === 0) {
         this.raiseWin()
       }
+    }
+
+    getWallBorder(gameConfig, idx) {
+      const wallVal = 1
+      const boardWidth = gameConfig.BOARD_WIDTH
+      const board = gameConfig.LAYOUT
+      const cellTopIdx = idx - boardWidth > 0 ? idx - boardWidth : null
+      const cellRightIdx = idx % boardWidth !== boardWidth - 1 ? idx + 1 : null
+      const cellLeftIdx = idx % boardWidth > 0 ? idx - 1 : null
+      const cellBottomIdx = idx + boardWidth < board.length ? idx + boardWidth : null
+
+      const config = {
+        top: cellTopIdx && board[cellTopIdx] === wallVal,
+        right: cellRightIdx && board[cellRightIdx] === wallVal,
+        left: cellLeftIdx && board[cellLeftIdx] === wallVal,
+        bottom: cellBottomIdx && board[cellBottomIdx] === wallVal,
+      }
+
+      return Object.entries(config).reduce((acc, [k, val]) => {
+        if (val) {
+          acc.push(k + "-border")
+        }
+        return acc
+      }, [])
     }
 
     // score
