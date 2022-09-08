@@ -1,0 +1,26 @@
+<div id="claimContainer" class="claim-container hidden">
+    <p id="claim-content"></p>
+    <button id="btnClaimStartGame" class="app-button">Start Game</button>
+</div>
+
+<div id="game-container" class="hidden">
+    <section class="header-section">
+        <div>
+            <button id="btnStartGame" class="app-button">Start Game</button>
+        </div>
+        <app-score></app-score>
+    </section>
+    <div class="game-content">
+        <app-grid></app-grid>
+        <app-virtual-pad></app-virtual-pad>
+    </div>
+</div>
+<app-gameover></app-gameover>
+<app-gamewin></app-gamewin>
+<app-gamewinbirth></app-gamewinbirth>
+<audio id="pacman_beginning" src="/pacman_beginning.wav" class="hidden"></audio>
+<audio id="pacman_chomp" src="/pacman_chomp.wav" class="hidden"></audio>
+<audio id="pacman_death" src="/pacman_death.wav" class="hidden"></audio>
+<audio id="pacman_eatfruit" src="/pacman_eatfruit.wav" class="hidden"></audio>
+<audio id="pacman_eatghost" src="/pacman_eatghost.wav" class="hidden"></audio>
+<audio id="pacman_win" src="/pacman_win.mp3" class="hidden"></audio>
