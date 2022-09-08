@@ -43,10 +43,10 @@ app-game {
 }
 
 .claim-container {
-    position: absolute;
+position: absolute;
     width: 70vw;
     height: 70vh;
-    background-color: rgba(32, 30, 30, .8);
+    background-color: #201e1ecc;
     will-change: opacity;
     display: flex;
     justify-content: center;
@@ -56,15 +56,17 @@ app-game {
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
+    gap: 1rem;
 }
 
 #claim-content {
-    font-family: 'Megrim';
+    font-family: Megrim;
     color: #f8eb00;
-    font-size: 2rem;
-    padding: 2rem;
-    line-height: 2.4rem;
+    font-size: 1.8rem;
+    padding: 1rem rem;
+    line-height: 2rem;
     text-align: center;
+    margin: 0;
 }
 
 @media (hover: none) and (pointer: coarse) {

@@ -21,7 +21,10 @@ export default {
   root: path.join(__dirname, "src"),
   build: {
     outDir: path.join(__dirname, "dist"),
+    emptyOutDir: true,
+    assetsInlineLimit: 0,
   },
+  publicDir: path.join(__dirname, "public"),
   server: {
     host: true,
   },

@@ -20,7 +20,7 @@
 
 .grid {
     width: calc(calc(var(--cell-size) + calc(2 * var(--cell-border))) * var(--grid-width));
-    height: calc(calc(var(--cell-size) +calc(2 * var(--cell-border))) * var(--grid-height));
+    height: calc(calc(var(--cell-size) + calc(2 * var(--cell-border))) * var(--grid-height));
     border: 0;
     display: flex;
     flex-wrap: wrap;
@@ -78,7 +78,7 @@
 }
 
 .pacman.down {
-    background-image: url('../.../../assets/characters/pacman/pacman_down.png');
+    background-image: url('../../assets/characters/pacman/pacman_down.png');
 }
 /* ghosts */
 
