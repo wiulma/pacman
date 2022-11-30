@@ -1,2 +1,2 @@
-# pacman
-Pacman game
+# PACMAN
+Pacman Game
