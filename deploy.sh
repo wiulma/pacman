@@ -12,8 +12,16 @@ cd dist
 # if you are deploying to a custom domain
 # echo 'www.example.com' > CNAME
 
-git init
-git checkout -b main
+if [ ! -d "./dist/.git" ]; then
+    git init
+fi
+
+if git show-ref -q --heads main; then
+   git checkout main
+else
+    git checkout -b main
+fi
+
 git add -A
 git commit -m 'deploy'
 
