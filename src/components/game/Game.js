@@ -10,21 +10,14 @@ import "../gameover/GameOver"
 import "../gamewin/GameWin"
 import "../gamewinbirth/GameWinBirth"
 
-import { CUSTOM_CLAIM, DEFAULT_CLAIM } from "./Claim"
-
-const BIRTH = "20200909"
+import { DEFAULT_CLAIM } from "./Claim"
 
 function isBirthday() {
-  const today = new Date()
-  return today.getMonth() === parseInt(BIRTH.substring(4, 6)) - 1 && today.getDate() === parseInt(BIRTH.substring(6, 8))
+  return false
 }
 
 function getClaimContent() {
-  let claim = DEFAULT_CLAIM
-  if (isBirthday()) {
-    claim = CUSTOM_CLAIM + DEFAULT_CLAIM.charAt(0).toLocaleLowerCase() + DEFAULT_CLAIM.substring(1)
-  }
-  return claim
+  return DEFAULT_CLAIM
 }
 
 customElements.define(
